@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>原神百科</title><link rel="stylesheet" href="/static/style.css"><script src="/static/app.js" defer></script></head>
+<body>
+<div class="app">
+ <aside class="sidebar" id="sidebar">
+  <div class="brand"><span class="brand-mark">✧</span><div>原神百科<small>GenshinHub</small></div><button class="icon mobile-only" id="close-sidebar" aria-label="关闭侧栏">×</button></div>
+  <button id="new-chat" class="new-chat"><span data-icon="plus"></span>新的对话<kbd>Ctrl N</kbd></button>
+  <button id="search-library" class="nav-button"><span data-icon="search"></span>搜索资料<span class="quiet">⌕</span></button>
+  <button id="open-memory" class="nav-button"><span data-icon="memory"></span>我的记忆<span class="count" id="memory-count">0</span></button>
+  <div class="history-heading">对话记录</div>
+  <input id="history-filter" class="history-filter" placeholder="搜索对话…" aria-label="搜索对话">
+  <nav id="chats" class="chats" aria-label="历史对话"></nav>
+  <div class="sidebar-bottom"><div class="archive-state"><span class="status-dot"></span><span>知识库已锁定<small id="locked-count">正在检查本地资料</small></span><span data-icon="lock"></span></div>
+   <button id="open-settings" class="settings-button"><span class="avatar">旅</span><span>本地工作空间<small id="key-status">连接你的 DeepSeek</small></span><span data-icon="settings"></span></button>
+  </div>
+ </aside>
+ <main class="main">
+  <header class="topbar"><button class="icon" id="toggle-sidebar" aria-label="切换侧栏"><span data-icon="sidebar"></span></button><button class="model-button" id="model-settings"><span id="model-label">DeepSeek Flash</span><span class="model-tag" id="mode-label">剧情研究</span><span data-icon="chevron"></span></button><div class="top-actions"><button class="icon" id="export-chat" title="导出对话" aria-label="导出对话"><span data-icon="download"></span></button><button class="icon" id="open-context" title="上下文信息" aria-label="上下文信息"><span data-icon="sliders"></span></button></div></header>
+  <div class="scroll-area" id="scroll-area">
+   <section class="welcome" id="welcome">
+    <div class="eyebrow"><span class="tiny-star">✧</span> 每一段旅程，都有迹可循</div>
+    <h1>从一个问题，<br>重新认识提瓦特。</h1>
+    <p>梳理人物的来路，读懂故事的因果。<br>在剧情与史料之间，找到有依据的回答。</p>
+    <div class="suggestions">
+     <button data-question="丑角和海洛塔帝在坎瑞亚是什么关系？他们的经历怎样影响后来的选择？"><span class="suggestion-tag">人物与关系</span><strong>丑角在成为统括官之前是谁？</strong><span class="suggestion-foot">追溯人物的过去与选择 <span>↗</span></span></button>
+     <button data-question="请按因果梳理水仙十字的完整故事，区分阿兰、雷内、雅各布与玛丽安的不同选择，并给出来源。"><span class="suggestion-tag">世界任务</span><strong>水仙十字的故事，究竟讲了什么？</strong><span class="suggestion-foot">把分散的线索连成故事 <span>↗</span></span></button>
+     <button data-question="枫丹的预言为什么最终得到化解？请区分芙宁娜、芙卡洛斯与那维莱特各自的作用。"><span class="suggestion-tag">剧情与因果</span><strong>谁改变了枫丹预言的结局？</strong><span class="suggestion-foot">理解计划、代价与结果 <span>↗</span></span></button>
+    </div>
+    <div class="welcome-note"><span data-icon="book"></span> 本地资料支持 · 回答可追溯原文 · 对话保存在这台电脑</div>
+   </section>
+   <section id="messages" class="messages" aria-label="聊天内容" hidden></section>
+  </div>
+  <div class="composer-wrap"><div class="run-status" id="run-status" aria-live="polite"></div><form id="composer" class="composer"><textarea id="prompt" rows="1" placeholder="想了解提瓦特的哪段故事？" aria-label="输入问题"></textarea><div class="composer-bottom"><div class="composer-tools"><span class="source-badge"><span data-icon="book"></span><span id="source-mode">本地知识库</span></span><button type="button" class="thinking-pill" id="thinking-settings"><span data-icon="spark"></span><span id="effort-label">原生思考</span></button><button type="button" class="thinking-pill" id="review-settings" title="复核会增加模型请求与费用"><span id="review-label">标准研究</span></button></div><button type="submit" id="send" class="send-button" aria-label="发送问题"><span data-icon="arrow"></span></button><button type="button" id="stop" class="send-button stop" hidden aria-label="停止回答"><span class="stop-square"></span></button></div></form><div class="composer-note">回答可能有误，请结合原文判断。Enter 发送 · Shift Enter 换行</div></div>
+ </main>
+ <aside class="detail-panel" id="detail-panel" hidden><div class="panel-header"><h2 id="panel-title">原文出处</h2><button class="icon" id="close-panel" aria-label="关闭详情">×</button></div><div id="panel-body" class="panel-body"></div></aside>
+</div>
+<dialog id="settings"><div class="dialog-head"><div><span class="eyebrow">你的模型，你的数据</span><h2>连接与偏好</h2></div><button class="icon" data-close="settings" aria-label="关闭设置">×</button></div>
+ <div class="settings-scroll"><section class="settings-section"><h3>DeepSeek API Key</h3><p class="muted">直接连接 DeepSeek 官方接口。支持自动读取 DEEPSEEK_API_KEY 环境变量。聊天与必要的检索片段会发送给 DeepSeek，历史记录保存在本机。</p><form id="key-form"><div class="key-row"><input type="password" id="api-key" placeholder="粘贴你的 API Key" autocomplete="off" spellcheck="false" aria-label="DeepSeek API Key"><button type="submit" class="primary" id="connect-key">验证并连接</button></div><label class="check-row"><input type="checkbox" id="persist-key">记住密钥，保存到系统凭据存储</label></form><div class="settings-result" id="connection-result" role="status"></div><button id="clear-key" class="text-button danger">清除密钥</button></section>
+ <section class="settings-section"><h3>模型与思考</h3><form id="preferences-form"><label>模型名<div class="input-with-button"><input id="model-input" value="deepseek-flash" list="model-list"><datalist id="model-list"><option value="deepseek-flash"></option></datalist><button type="button" id="refresh-models" class="secondary">刷新可用模型</button></div></label><p class="hint">默认使用官方 Flash 别名；版本映射由 DeepSeek 维护。</p><div class="two-columns"><label>思考强度<select id="effort"><option value="default">遵循 API 默认</option><option value="none">关闭思考</option><option value="low">低</option><option value="high">高</option><option value="max">最高</option></select></label><label>输出 Token 上限<input id="max-tokens" type="number" min="1" max="393216" placeholder="留空：遵循 API 默认"></label></div><label class="check-row"><input type="checkbox" id="review-answer">专业复核：检查初稿的证据与因果</label><p class="hint">知识库对话可选启用，默认关闭。增加独立审阅和修订两阶段请求，可能补查资料，也会增加等待时间与费用；原生对话不启用。初稿完整保留，可展开查看。</p><label>每次回答最多查询轮数<input id="tool-rounds" type="number" min="1" max="128" value="32"></label><p class="hint">保留完整历史与模型推理字段，不自动摘要或截断。实际上下文、默认输出和服务性能由官方接口决定；上限错误会明确显示。</p><button class="primary" type="submit">保存偏好</button></form></section>
+ <section class="settings-section"><h3>原生 API 对照</h3><p class="muted">新建不附加知识库、记忆或系统提示的对话，使用同一 API 与完整历史。不同输入、服务负载及随机生成会影响答案和延迟。</p><button class="secondary" id="new-direct">新建原生对话</button></section></div>
+</dialog>
+<dialog id="confirm-dialog"><div class="dialog-head"><h2 id="confirm-title">确认操作</h2></div><p id="confirm-text"></p><div class="dialog-actions"><button class="secondary" id="confirm-no">取消</button><button class="primary" id="confirm-yes">确认</button></div></dialog>
+<div class="toast" id="toast" role="status" hidden></div>
+</body></html>

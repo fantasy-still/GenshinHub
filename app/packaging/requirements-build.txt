@@ -1,0 +1,5 @@
+pyinstaller==6.22.3
+pyinstaller-hooks-contrib==2026.8
+altgraph==0.17.5
+pefile==2024.8.26
+setuptools==84.0.0
